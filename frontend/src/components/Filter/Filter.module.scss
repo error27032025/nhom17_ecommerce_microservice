@@ -1,0 +1,46 @@
+.wrapper {
+  padding: 30px 35px;
+  margin-bottom: 55px;
+  height: 358px;
+  color: var(--primary);
+}
+
+.wrapper h4 {
+  font-size: 2.4rem;
+
+  margin-bottom: 13px;
+}
+
+.wrapper h5 {
+  font-size: 1.6rem;
+  margin-bottom: 18px;
+}
+
+.custom-checkbox {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-color: #fff;
+  border: 2px solid #000;
+  border-radius: 0; /* Đảm bảo checkbox là hình vuông */
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.custom-checkbox:checked {
+  background-color: #fc7c7c;
+  border-color: #fc7c7c;
+}
+
+.custom-checkbox:focus {
+  outline: none;
+  box-shadow: none; /* Tắt hiệu ứng phát sáng */
+}
+
+.custom-checkbox + label {
+  cursor: pointer;
+}
+
+.custom-label {
+  margin: 5px 0;
+}

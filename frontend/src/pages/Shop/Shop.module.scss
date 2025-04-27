@@ -1,0 +1,28 @@
+.wrapper {
+  width: 100%;
+}
+.product-count {
+  padding: 10px 30px;
+  border-radius: 30px;
+  border: 1px solid var(--active);
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.product-count h4 {
+  margin-bottom: 0px;
+}
+
+.product-count p {
+  color: var(--active);
+  padding: 0 5px;
+  margin-bottom: 0px;
+}
+.filter {
+  @media (max-width: 576px) {
+    display:flex;
+    justify-content: center;
+  }
+}

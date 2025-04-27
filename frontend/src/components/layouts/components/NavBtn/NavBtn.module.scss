@@ -1,0 +1,62 @@
+$hover-image: "../../../../assets/img/others/menu_shape.png";
+
+.wrapper {
+  margin: 0 20px;
+  color: black;
+  position: relative;
+
+  > a {
+    position: relative;
+    transition: color 0.3s ease;
+    &::before {
+      position: absolute;
+      content: "";
+      background: url(#{$hover-image});
+      background-size: cover;
+      background-repeat: no-repeat;
+      left: 50%;
+      top: 50%;
+      width: 98px;
+      height: 63px;
+      -webkit-transform: translateX(-50%) translateY(-50%);
+      transform: translateX(-50%) translateY(-50%);
+      z-index: -1;
+      opacity: 0;
+      -webkit-transition: opacity 0.3s, visibility 0.3s;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    &:hover::before {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  > a:hover {
+    color: var(--white);
+  }
+}
+
+.active {
+  &::before {
+    position: absolute;
+    content: "";
+    background: url(#{$hover-image});
+    background-size: cover;
+    background-repeat: no-repeat;
+    left: 50%;
+    top: 50%;
+    width: 98px;
+    height: 63px;
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+    z-index: -1;
+    opacity: 1;
+    -webkit-transition: opacity 0.3s, visibility 0.3s;
+    transition: opacity 0.3s, visibility 0.3s;
+  }
+
+  a {
+    color: white;
+  }
+}

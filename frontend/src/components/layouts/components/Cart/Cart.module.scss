@@ -1,0 +1,54 @@
+.wrapper {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 315px;
+  height: 100%;
+  background-color: #fff;
+  z-index: 1100;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.header h2 {
+  margin: 0;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ededed;
+  .close {
+    transition: color 0.3s ease;
+    cursor: pointer;
+    &:hover {
+      color: var(--active);
+    }
+  }
+}
+
+.wrapper button {
+  display: flex;
+  justify-content: center;
+  background-color: #eef0f1;
+  font-size: 1.2rem;
+  width: 100%;
+  padding: 15px 0;
+  margin: 10px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.wrapper button:hover {
+  background-color: var(--active); /* Cùng màu với active */
+  color: white; /* Đổi màu chữ */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng bóng */
+}
+.active {
+  background-color: var(--active);
+  color: white;
+}

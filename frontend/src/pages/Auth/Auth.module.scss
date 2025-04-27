@@ -1,0 +1,98 @@
+.wrapper {
+  width: 100%;
+
+  .common-form {
+    @media(max-width:576px) {
+      width: 400px;
+    }
+    width: 516px;
+    height: 367px;
+    padding: 30px;
+    border: 1px solid var(--primary);
+    border-radius: 10px;
+  }
+  .input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid var(--primary);
+    border-radius: 5px;
+    transition: border 0.1s ease;
+    &:focus {
+      border: 1px solid var(--active);
+    }
+  }
+  .auth {
+    margin-bottom: 86px;
+    background-color: #f8f9fa;
+
+    @extend .common-form;
+    .login {
+      input {
+        @extend .input;
+      }
+      input:nth-last-of-type(1) {
+        // margin-bottom: 86px;
+      }
+      .remember {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 42px;
+
+        p {
+          margin: 0;
+          color: var(--primary);
+        }
+        input {
+          width: 5px;
+          margin: 0px;
+          cursor: pointer;
+          appearance: none; // Loại bỏ style mặc định của trình duyệt
+          border: 1px solid var(--primary);
+          border-radius: 4px;
+          background-color: white;
+          transition: background-color 0.2s ease, border 0.2s ease;
+          position: relative;
+          &:checked {
+            background-color: var(--active);
+            border: 1px solid var(--active);
+          }
+
+          &:checked::after {
+            content: "✔"; // Unicode dấu tích
+            font-size: 10px;
+            color: white;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+          }
+        }
+      }
+    }
+    .signup {
+      input {
+        @extend .input;
+      }
+    }
+  }
+}
+.header {
+  color: var(--primary);
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  h2 {
+    transition: color 0.1s ease;
+    &:hover {
+      color: var(--active);
+      cursor: pointer;
+    }
+  }
+}
+
+.active {
+  color: var(--active);
+}
