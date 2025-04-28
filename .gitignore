@@ -1,0 +1,23 @@
+# Thư mục build và tệp biên dịch
+build/
+target/
+
+# Các tệp của công cụ xây dựng
+.mvn/
+.gradle/
+
+# Các tệp cấu hình của IDE
+.idea/
+*.iml
+.project
+.settings/
+
+# Tệp log
+*.log
+
+# Thư mục node_modules
+node_modules/
+
+# Các tệp hệ thống
+.DS_Store
+Thumbs.db

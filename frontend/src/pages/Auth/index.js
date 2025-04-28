@@ -18,16 +18,17 @@ function Auth({ showToast }) {
   const navigate = useNavigate();
 
   const [auth, setAuth] = useState("login");
-  const emailRef = useRef();
+  const fullnameRef = useRef();
+  const usernameRef = useRef();
   const passwordRef = useRef();
-  const nameRef = useRef();
+  const emailRef = useRef();
 
   const [rememberMe, setRememberMe] = useState(false);
 
   useEffect(() => {
     const savedEmail = localStorage.getItem("rememberedEmail");
     if (savedEmail) {
-      emailRef.current.value = savedEmail;
+      usernameRef.current.value = savedEmail;
       setRememberMe(true);
     }
   }, []);
@@ -35,12 +36,12 @@ function Auth({ showToast }) {
   const authApi = async (endpoint, data) => {
     try {
       const response = await axios.post(
-        `http://34.87.146.141:3001/api/v1/users/${endpoint}`,
+        `http://localhost:8088/api/auth/${endpoint}`,
         data
       );
 
-      if (response.data?.accessToken) {
-        localStorage.setItem("token", response.data.accessToken);
+      if (response.data?.access_token) {
+        localStorage.setItem("token", response.data.access_token);
 
         if (endpoint === "signin") {
           setTimeout(() => navigate("/"), 1000);
@@ -48,19 +49,26 @@ function Auth({ showToast }) {
         } else {
           setAuth("login");
           dispatch(successToast({ message: "Đăng ký thành công" }));
-          emailRef.current.value = "";
+          fullnameRef.current.value = "";
+          usernameRef.current.value = "";
           passwordRef.current.value = "";
-          nameRef.current.value = "";
+          emailRef.current.value = "";
         }
 
         if (rememberMe) {
-          localStorage.setItem("rememberedEmail", emailRef.current.value);
+          localStorage.setItem("rememberedEmail", usernameRef.current.value);
         } else {
           localStorage.removeItem("rememberedEmail");
         }
       }
     } catch (error) {
-      dispatch(dangerToast({ message: `lỗi` }));
+      // Kiểm tra xem lỗi có phản hồi từ server không và có dữ liệu không
+      const errorMessage = error?.response?.data?.msg || "Lỗi không xác định";
+
+      // Gửi thông báo lỗi với thông điệp từ server
+      dispatch(dangerToast({ message: errorMessage }));
+
+      // In ra lỗi vào console để debug
       console.log(error);
     }
   };
@@ -89,14 +97,18 @@ function Auth({ showToast }) {
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         authApi("signin", {
-                          email: emailRef.current.value,
+                          username: usernameRef.current.value,
                           password: passwordRef.current.value,
                         });
                       }
                     }}
                     className={cx("form")}
                   >
-                    <input ref={emailRef} type="text" placeholder="Email" />
+                    <input
+                      ref={usernameRef}
+                      type="text"
+                      placeholder="Username"
+                    />
                     <input
                       ref={passwordRef}
                       type="password"
@@ -114,7 +126,7 @@ function Auth({ showToast }) {
                     <Button
                       onClick={() =>
                         authApi("signin", {
-                          email: emailRef.current.value,
+                          username: usernameRef.current.value,
                           password: passwordRef.current.value,
                         })
                       }
@@ -143,27 +155,61 @@ function Auth({ showToast }) {
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         authApi("signup", {
-                          email: emailRef.current.value,
+                          fullname: fullnameRef.current.value,
+                          username: usernameRef.current.value,
                           password: passwordRef.current.value,
-                          name: nameRef.current.value,
+                          email: emailRef.current.value,
                         });
                       }
                     }}
                     className={cx("form")}
                   >
-                    <input ref={emailRef} type="text" placeholder="Email" />
-                    <input
-                      ref={passwordRef}
-                      type="password"
-                      placeholder="Password"
-                    />
-                    <input ref={nameRef} type="text" placeholder="Name" />
+                    <div className={cx("form-group")}>
+                      <label htmlFor="fullname">Fullname</label>
+                      <input
+                        id="fullname"
+                        ref={fullnameRef}
+                        type="text"
+                        placeholder="Fullname"
+                      />
+                    </div>
+
+                    <div className={cx("form-group")}>
+                      <label htmlFor="username">Username</label>
+                      <input
+                        id="username"
+                        ref={usernameRef}
+                        type="text"
+                        placeholder="Username"
+                      />
+                    </div>
+
+                    <div className={cx("form-group")}>
+                      <label htmlFor="password">Password</label>
+                      <input
+                        id="password"
+                        ref={passwordRef}
+                        type="password"
+                        placeholder="Password"
+                      />
+                    </div>
+
+                    <div className={cx("form-group")}>
+                      <label htmlFor="email">Email</label>
+                      <input
+                        id="email"
+                        ref={emailRef}
+                        type="text"
+                        placeholder="Email"
+                      />
+                    </div>
                     <Button
                       onClick={() =>
                         authApi("signup", {
-                          email: emailRef.current.value,
+                          fullname: fullnameRef.current.value,
+                          username: usernameRef.current.value,
                           password: passwordRef.current.value,
-                          name: nameRef.current.value,
+                          email: emailRef.current.value,
                         })
                       }
                       fwidth
