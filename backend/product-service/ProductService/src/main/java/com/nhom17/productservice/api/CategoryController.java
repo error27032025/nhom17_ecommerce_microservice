@@ -67,6 +67,8 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.findById(Integer.parseInt(categoryId)));
     }
 
+
+
     //     Create a new category
     /*
     {
@@ -79,13 +81,13 @@ public class CategoryController {
             }
         }
      */
-
     @PostMapping
     public ResponseEntity<Mono<CategoryDto>> save(@RequestBody @NotNull(message = "Input must not be NULL")
                                                   @Valid final CategoryDto categoryDto) {
         log.info("CategoryDto, resource; save category");
         return ResponseEntity.ok(categoryService.save(categoryDto));
     }
+
 
 
     // Update information of all category
@@ -120,6 +122,8 @@ public class CategoryController {
         log.info("CategoryDto, resource; update category with categoryId");
         return ResponseEntity.ok(categoryService.update(Integer.parseInt(categoryId), categoryDto));
     }
+
+
 
     // Delete a category: http://localhost:8086/api/categories/22
     @DeleteMapping("/{categoryId}")
