@@ -68,6 +68,18 @@ public class CategoryController {
     }
 
     //     Create a new category
+    /*
+    {
+           "categoryTitle": "test",
+            "imageUrl": "http://duytien2905.com/smartphones.jpg",
+            "parentCategory": {
+                "categoryId": 1,
+                "categoryTitle": "Electronics",
+                "imageUrl": "http://duytien2905.com/electronics.jpg"
+            }
+        }
+     */
+
     @PostMapping
     public ResponseEntity<Mono<CategoryDto>> save(@RequestBody @NotNull(message = "Input must not be NULL")
                                                   @Valid final CategoryDto categoryDto) {
@@ -75,7 +87,20 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.save(categoryDto));
     }
 
+
     // Update information of all category
+        /*
+        {
+            "categoryId": 22,
+           "categoryTitle": "aaa",
+            "imageUrl": "http://duytien2905.com/smartphones.jpg",
+            "parentCategory": {
+                "categoryId": 1,
+                "categoryTitle": "Electronics",
+                "imageUrl": "http://duytien2905.com/electronics.jpg"
+            }
+        }
+     */
     @PutMapping
     public ResponseEntity<CategoryDto> update(@RequestBody
                                               @NotNull(message = "Input must not be NULL")
@@ -84,7 +109,8 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.update(categoryDto));
     }
 
-    // Update information of a category
+
+    // Update information of a category : http://localhost:8086/api/categories/22
     @PutMapping("/{categoryId}")
     public ResponseEntity<CategoryDto> update(@PathVariable("categoryId")
                                               @NotBlank(message = "Input must not be blank")
@@ -95,7 +121,7 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.update(Integer.parseInt(categoryId), categoryDto));
     }
 
-    // Delete a category
+    // Delete a category: http://localhost:8086/api/categories/22
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<Boolean> deleteById(@PathVariable("categoryId") final String categoryId) {
         log.info("Boolean, resource; delete category by id");

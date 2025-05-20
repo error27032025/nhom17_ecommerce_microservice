@@ -20,7 +20,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/products") //http://localhost:8086/api/products
 public class ProductController {
 
     @Autowired
@@ -34,7 +34,7 @@ public class ProductController {
     }
 
     // Get detailed information of a specific product
-    @GetMapping("/{productId}")
+    @GetMapping("/{productId}") //http://localhost:8086/api/products/1
     public ResponseEntity<ProductDto> findById(@PathVariable("productId")
                                                @NotBlank(message = "Input must not be blank!")
                                                @Valid final String productId) {
@@ -42,7 +42,22 @@ public class ProductController {
         return ResponseEntity.ok(productService.findById(Integer.parseInt(productId)));
     }
 
-    // Create a new product
+
+    // CREATE NEW PRODUCT: http://localhost:8086/api/products
+    /*
+    {
+    "productTitle": "Laptop Model A",
+    "imageUrl": "http://duytien2905.com/laptopA.jpg",
+    "sku": "SKU001",
+    "priceUnit": 999.99,
+    "quantity": 10,
+    "category": {
+        "categoryId": 3,
+        "categoryTitle": "Laptops",
+        "imageUrl": "http://duytien2905.com/laptops.jpg"
+    }
+}
+ */
     @PostMapping
     public ResponseEntity<ProductDto> save(@RequestBody
                                            @NotNull(message = "Input must not be NULL!")
@@ -60,7 +75,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.update(productDto));
     }
 
-    // Update information of a product:
+    // Update information of a product: http://localhost:8086/api/products/1
     @PutMapping("/{productId}")
     public ResponseEntity<ProductDto> update(@PathVariable("productId")
                                              @NotBlank(message = "Input must not be blank!")
@@ -72,7 +87,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.update(Integer.parseInt(productId), productDto));
     }
 
-    // Delete a product
+    // Delete a product http://localhost:8086/api/products/1
     @DeleteMapping("/{productId}")
     public ResponseEntity<Boolean> deleteById(@PathVariable("productId") final String productId) {
         log.info("Boolean, resource; delete product by id");
