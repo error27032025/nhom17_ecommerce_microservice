@@ -23,5 +23,5 @@ public interface ProductService {
 
     void deleteById(final Integer productId);
 
-    
+
 }
