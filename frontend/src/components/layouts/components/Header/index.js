@@ -76,7 +76,7 @@ function Header({ toggleOverlay, toggleSearch, toggleMenu }) {
               <img
                 alt=""
                 className={cx("logo")}
-                referrerpolicy="origin-when-cross-origin"
+                referrerPolicy="origin-when-cross-origin"
                 src={logo}
               />
             </Link>
@@ -95,7 +95,9 @@ function Header({ toggleOverlay, toggleSearch, toggleMenu }) {
               </>
             )}
           </div>
-          <div onClick={toggleMenu} className={cx("menu")}><RiMenuFold3Line /></div>
+          <div onClick={toggleMenu} className={cx("menu")}>
+            <RiMenuFold3Line />
+          </div>
           <div className={cx("right")}>
             {!isCartPage ? (
               <>
