@@ -34,6 +34,7 @@ public class UserAuth {
 
     private final UserService userService;
     private final JwtProvider jwtProvider;
+    private final AuthorityTokenUtil authorityTokenUtil;
 
     @Autowired
     private EmailService emailService;
@@ -42,9 +43,10 @@ public class UserAuth {
     private TokenValidate validate;
 
     @Autowired
-    public UserAuth(UserService userService, JwtProvider jwtProvider) {
+    public UserAuth(UserService userService, JwtProvider jwtProvider, AuthorityTokenUtil authorityTokenUtil) {
         this.userService = userService;
         this.jwtProvider = jwtProvider;
+        this.authorityTokenUtil = authorityTokenUtil;
     }
 
     @Operation(
@@ -108,14 +110,19 @@ public class UserAuth {
     })
     @PostMapping("/logout")
     @PreAuthorize("isAuthenticated() and hasAuthority('USER')")
-    public Mono<ResponseEntity<String>> logout() {
+    public Mono<ResponseEntity<String>> logout(@RequestHeader("Authorization") String authHeader) {
         log.info("Logout endpoint called");
-        return userService.logout()
-                .then(Mono.just(new ResponseEntity<>("Logged out successfully.", HttpStatus.OK)))
-                .onErrorResume(error -> {
-                    log.error("Logout failed", error);
-                    return Mono.just(new ResponseEntity<>("Logout failed.", HttpStatus.BAD_REQUEST));
-                });
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return Mono.just(new ResponseEntity<>("Invalid or missing Authorization header", HttpStatus.BAD_REQUEST));
+        }
+        String token = authHeader.substring(7); // Lấy token bỏ chữ "Bearer "
+
+        return userService.logout(token)
+            .then(Mono.just(new ResponseEntity<>("Logged out successfully.", HttpStatus.OK)))
+            .onErrorResume(error -> {
+                log.error("Logout failed", error);
+                return Mono.just(new ResponseEntity<>("Logout failed: " + error.getMessage(), HttpStatus.BAD_REQUEST));
+            });
     }
 
     @Operation(
@@ -151,16 +158,19 @@ public class UserAuth {
     public ResponseEntity<TokenValidationResponse> getAuthority(@RequestHeader(name = "Authorization") String authorizationToken,
                                                                 @RequestParam("requiredRole") String requiredRole) {
         try {
-            AuthorityTokenUtil authorityTokenUtil = new AuthorityTokenUtil();
             List<String> authorities = authorityTokenUtil.checkPermission(authorizationToken);
+            log.info("Authorities from token: {}", authorities);
+            log.info("Required role: {}", requiredRole);
 
-            if (authorities.contains(requiredRole)) {
+            if (authorities != null && authorities.contains(requiredRole)) {
                 return ResponseEntity.ok(new TokenValidationResponse("Role access API"));
             } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new TokenValidationResponse("User does not have the required authority"));
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new TokenValidationResponse("User does not have the required authority"));
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new TokenValidationResponse("Invalid token"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new TokenValidationResponse("Invalid token"));
         }
     }
 }

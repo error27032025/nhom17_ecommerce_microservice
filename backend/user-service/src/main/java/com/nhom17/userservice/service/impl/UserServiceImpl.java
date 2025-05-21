@@ -12,6 +12,7 @@ import com.nhom17.userservice.model.entity.RoleName;
 import com.nhom17.userservice.model.entity.User;
 import com.nhom17.userservice.repository.UserRepository;
 import com.nhom17.userservice.security.jwt.JwtProvider;
+import com.nhom17.userservice.security.token.TokenBlacklist;
 import com.nhom17.userservice.security.userprinciple.UserDetailService;
 import com.nhom17.userservice.security.userprinciple.UserPrinciple;
 import com.nhom17.userservice.service.RoleService;
@@ -46,6 +47,8 @@ public class UserServiceImpl implements UserService {
     private final UserDetailService userDetailsService;
     private final ModelMapper modelMapper;
     private final RoleService roleService;
+    private final TokenBlacklist tokenBlacklist;
+
 
     Gson gson = new Gson(); // google.code.gson
     @Autowired
@@ -63,7 +66,8 @@ public class UserServiceImpl implements UserService {
                            JwtProvider jwtProvider,
                            UserDetailService userDetailsService,
                            ModelMapper modelMapper,
-                           RoleService roleService
+                           RoleService roleService,
+                           TokenBlacklist tokenBlacklist
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -71,6 +75,7 @@ public class UserServiceImpl implements UserService {
         this.userDetailsService = userDetailsService;
         this.modelMapper = modelMapper;
         this.roleService = roleService;
+        this.tokenBlacklist = tokenBlacklist;
     }
 
     @Override
@@ -227,21 +232,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Mono<Void> logout() {
+    public Mono<Void> logout(String token) {
         return Mono.defer(() -> {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-            SecurityContextHolder.getContext().setAuthentication(null);
-
-            String currentToken = getCurrentToken();
-
-            if (authentication != null && authentication.isAuthenticated()) {
-                // Invalidate the current token by reducing its expiration time
-                String updatedToken = jwtProvider.reduceTokenExpiration(currentToken);
-            }
-
+            tokenBlacklist.add(token);
             SecurityContextHolder.clearContext();
-
             return Mono.empty();
         });
     }
