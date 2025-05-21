@@ -32,7 +32,7 @@ public class CategoryController {
 
     // Get a list of all categories
     @GetMapping
-    public ResponseEntity<Flux<List<CategoryDto>>> findAll() {
+    public ResponseEntity<Flux<CategoryDto>> findAll() {
         log.info("CategoryDto List, controller; fetch all categories");
         return ResponseEntity.ok(categoryService.findAll());
     }

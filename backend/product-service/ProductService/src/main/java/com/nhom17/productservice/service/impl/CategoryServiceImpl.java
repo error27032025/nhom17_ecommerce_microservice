@@ -39,23 +39,18 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepositoryPagingAndSorting categoryRepositoryPagingAndSorting;
 
     @Override
-    public Flux<List<CategoryDto>> findAll() {
+    public Flux<CategoryDto> findAll() {
         log.info("Category List Service, fetch all category");
-        return Flux.just(categoryRepository.findAll())
-                .flatMap(categories -> Flux.fromIterable(categories)
-                        .map(CategoryMappingHelper::map)
-                        .distinct()
-                        .collectList()
-                )
-                .map(categoryDtos -> {
-                    log.info("Categories fetched successfully");
-                    return categoryDtos;
-                })
+        return Flux.fromIterable(categoryRepository.findAll()) // từ List<Category> tạo Flux<Category>
+                .map(CategoryMappingHelper::map)  // map sang CategoryDto
+                .distinct()
+                .doOnComplete(() -> log.info("Categories fetched successfully"))
                 .onErrorResume(throwable -> {
                     log.error("Error while fetching categories: " + throwable.getMessage());
-                    return Mono.just(Collections.emptyList());
+                    return Flux.empty();
                 });
     }
+
 
 
 //    @Override

@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface CategoryService {
 
-    Flux<List<CategoryDto>> findAll();
+    Flux<CategoryDto> findAll();
 
     Page<CategoryDto> findAllCategory(int page, int size);
     List<CategoryDto> getAllCategories(Integer pageNo, Integer pageSize, String sortBy);
