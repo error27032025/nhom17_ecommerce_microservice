@@ -131,7 +131,7 @@ function Product() {
                         <img src={product.imageUrl} alt="Selected" />
                       </div>
                     </Col>
-                    {/* <Col md={2}>
+                    <Col md={2}>
                       <div className={cx("slider")}>
                         <Slider ref={sliderRef} {...sliderSettings}>
                           {product.images?.map((image, index) => {
@@ -151,7 +151,7 @@ function Product() {
                           })}
                         </Slider>
                       </div>
-                    </Col> */}
+                    </Col>
                   </Row>
                 </Container>
               </div>

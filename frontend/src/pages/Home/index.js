@@ -25,21 +25,21 @@ function Home() {
   const [products, setProducts] = useState([]);
   const [cate, setCate] = useState([]);
 
-  // useEffect(() => {
-  //   const fetchCate = async () => {
-  //     const response = await axios.get(
-  //       "http://34.87.146.141:3001/api/v1/categories"
-  //     );
-  //     setCate(response.data);
-  //   };
-  //   fetchCate();
-  // }, []);
+  useEffect(() => {
+    const fetchCate = async () => {
+      const response = await axios.get(
+        "http://192.168.100.53:8086/api/categories"
+      );
+      setCate(response.data);
+    };
+    fetchCate();
+  }, []);
 
   // useEffect(() => {
   //   const fetchProducts = async () => {
   //     try {
   //       const response = await axios.get(
-  //         "http://34.87.146.141:3001/api/v1/products"
+  //         "http://localhost:8086/api/products"
   //       );
   //       setProducts(response.data);
   //     } catch (err) {}
@@ -166,7 +166,8 @@ function Home() {
                     name={product.title}
                     price={product.price}
                     image={
-                      "http://34.87.146.141:3001/" + product.images[0]?.filepath
+                      "http://192.168.100.53:3000/" +
+                      product.images[0]?.filepath
                     }
                     id={product.id}
                     to={`/product/${product.id}`}
@@ -217,7 +218,8 @@ function Home() {
                     name={product.title}
                     price={product.price}
                     image={
-                      "http://34.87.146.141:3001/" + product.images[0]?.filepath
+                      "http://192.168.100.53:3000/" +
+                      product.images[0]?.filepath
                     }
                     id={product.id}
                     to={`/product/${product.id}`}

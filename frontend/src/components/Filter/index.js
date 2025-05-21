@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Form } from "react-bootstrap";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-import styles from "./Filter.module.scss";
 import classNames from "classnames/bind";
+import styles from "./Filter.module.scss";
 
 const cx = classNames.bind(styles);
 
@@ -27,8 +27,9 @@ const Filter = ({ categories = [], onFilterChange, selectedCate }) => {
     [onFilterChange]
   );
 
-  const handleCheckboxChange = (cateId) => {
-    const newCateId = cateId === "all" ? null : cateId;
+  const handleCategoryChange = (cateId) => {
+    // Nếu chọn "Tất cả" (cateId === null), chuyển thành null
+    const newCateId = cateId === null ? null : cateId;
     setSelectedCateId(newCateId);
     debounceFilter({ cateId: newCateId, price: priceRange });
   };
@@ -42,39 +43,40 @@ const Filter = ({ categories = [], onFilterChange, selectedCate }) => {
     <div
       className={cx("wrapper")}
       style={{
-        padding: "20px",
+        padding: 20,
         background: "#f8f9fa",
-        borderRadius: "8px",
-        width: "250px",
+        borderRadius: 8,
+        width: 250,
       }}
     >
       <h4>Bộ Lọc</h4>
 
-      {/* Filter by Category */}
-      <h5 className={cx("title-1")} style={{ marginTop: "20px" }}>
+      <h5 className={cx("title-1")} style={{ marginTop: 20 }}>
         Lọc theo danh mục
       </h5>
 
-      {/* Danh sách categories */}
-      {Array.isArray(categories) &&
+      {Array.isArray(categories) && categories.length > 0 ? (
         categories.map((category, index) => {
-          const id = category?.id ?? `unknown-${index}`;
-          const label = category?.title ?? `Danh mục ${index + 1}`;
+          const id = category?.categoryId ?? `unknown-${index}`;
+          const label = category?.categoryTitle ?? `Danh mục ${index + 1}`;
           return (
             <Form.Check
-              key={`cate-${id}`} // đảm bảo key duy nhất và ổn định
+              key={`cate-${id}`}
               type="radio"
               id={`custom-radio-${id}`}
               label={label}
-              checked={selectedCateId === category.id}
-              onChange={() => handleCheckboxChange(category.id)}
+              name="categoryFilter"
+              checked={selectedCateId === category.categoryId}
+              onChange={() => handleCategoryChange(category.categoryId)}
               className="d-flex align-items-center"
             />
           );
-        })}
+        })
+      ) : (
+        <p>Không có danh mục</p>
+      )}
 
-      {/* Filter by Price */}
-      <h5 className={cx("title-2")} style={{ marginTop: "20px" }}>
+      <h5 className={cx("title-2")} style={{ marginTop: 20 }}>
         Lọc giá sản phẩm
       </h5>
       <Slider
@@ -87,7 +89,7 @@ const Filter = ({ categories = [], onFilterChange, selectedCate }) => {
         trackStyle={[{ backgroundColor: "#fc7c7c" }]}
         handleStyle={[{ borderColor: "#fc7c7c" }, { borderColor: "#fc7c7c" }]}
       />
-      <p style={{ marginTop: "10px", fontWeight: "bold" }}>
+      <p style={{ marginTop: 10, fontWeight: "bold" }}>
         Giá: {priceRange[0].toLocaleString()} $ -{" "}
         {priceRange[1].toLocaleString()} $
       </p>
