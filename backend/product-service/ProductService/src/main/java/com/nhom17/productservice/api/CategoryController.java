@@ -20,7 +20,7 @@ import reactor.core.publisher.Mono;
 
 
 import java.util.List;
-@CrossOrigin(origins = "http://192.168.100.53:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 @Slf4j
 @RequiredArgsConstructor
 @RestController

@@ -24,8 +24,8 @@ function Product() {
   const reviewsCall = useSelector((state) => state.review || {});
   const reviews = reviewsCall.reviews?.[id] || [];
 
-  const BASE_IMAGE_URL = "http://192.168.100.53:8086/";
-  const BASE_API_URL = "http://192.168.100.53:8086/api/products"; // IP server backend
+  const BASE_IMAGE_URL = "http://localhost:8086/";
+  const BASE_API_URL = "http://localhost:8086/api/products"; // IP server backend
   const [product, setProduct] = useState(null);
   const sliderRef = useRef(null);
   const [selectedImage, setSelectedImage] = useState("");
