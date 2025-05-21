@@ -13,7 +13,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import classNames from "classnames/bind";
 import axios from "axios";
-import {motion} from "framer-motion"
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import ScrollReveal from "../../components/layouts/components/ScrollReveal";
 
@@ -56,53 +56,57 @@ function Home() {
       <div className={cx("wrapper")}>
         <Container fluid className={cx("banner")}>
           <Container>
-          <Row>
-            <Col lg={6} md={6} xs={12}>
-              <div className={cx("inner")}>
-                <div className={cx("sale-off")}>
-                  <span style={{ color: "var(--active)", marginRight: "10px" }}>70%</span>
-                  <h3 style={{ fontSize: "30px" }}>Giảm sốc !!!</h3>
+            <Row>
+              <Col lg={6} md={6} xs={12}>
+                <div className={cx("inner")}>
+                  <div className={cx("sale-off")}>
+                    <span
+                      style={{ color: "var(--active)", marginRight: "10px" }}
+                    >
+                      70%
+                    </span>
+                    <h3 style={{ fontSize: "30px" }}>Giảm sốc !!!</h3>
+                  </div>
+                  <div className={cx("description")}>
+                    Máy Ngon, Giá Giảm – Mua Thả Ga!
+                  </div>
+                  <Pill to="shop" large />
                 </div>
-                <div className={cx("description")}>
-                  Máy Ngon, Giá Giảm – Mua Thả Ga! 
+              </Col>
+              <Col lg={6} md={6} xs={12} className="d-none d-md-block">
+                <div className={cx("banner-img")}>
+                  <motion.img
+                    alt=""
+                    src={centerBanner}
+                    animate={{ y: [0, -30, 0] }} // Nhảy lên 10px rồi xuống lại
+                    transition={{
+                      duration: 1.2, // Tổng thời gian một chu kỳ
+                      repeat: Infinity, // Lặp vô hạn
+                      repeatType: "loop", // Lặp liên tục
+                      ease: "easeInOut", // Làm mượt hiệu ứng
+                    }}
+                  />
                 </div>
-                <Pill to="shop" large />
-              </div>
-            </Col>
-            <Col lg={6} md={6} xs={12} className="d-none d-md-block">
-              <div className={cx("banner-img")}>
-                <motion.img
-                  alt=""
-                  src={centerBanner}
-                  animate={{ y: [0, -30, 0] }} // Nhảy lên 10px rồi xuống lại
-                  transition={{
-                    duration: 1.2, // Tổng thời gian một chu kỳ
-                    repeat: Infinity, // Lặp vô hạn
-                    repeatType: "loop", // Lặp liên tục
-                    ease: "easeInOut", // Làm mượt hiệu ứng
-                  }}
-                />
-              </div>
-            </Col>
-          </Row>
+              </Col>
+            </Row>
           </Container>
         </Container>
 
         <Container>
           {/* <Row> */}
-            <Row className={cx("services")}>
-              {cate.slice(0, 4).map((category, index) => (
-                <Col lg={3} md={12} sm={12} key={category.id}>
-                  <div className={cx("service")}>
-                    <img alt="" src={cateImg[index]} />
-                    <button onClick={() => handleCateNavi(category.id)}>
-                      {category.title}
-                    </button>
-                    <p>{category.description}</p>
-                  </div>
-                </Col>
-              ))}
-            </Row>
+          <Row className={cx("services")}>
+            {cate.slice(0, 4).map((category, index) => (
+              <Col lg={3} md={12} sm={12} key={category.id}>
+                <div className={cx("service")}>
+                  <img alt="" src={cateImg[index]} />
+                  <button onClick={() => handleCateNavi(category.id)}>
+                    {category.title}
+                  </button>
+                  <p>{category.description}</p>
+                </div>
+              </Col>
+            ))}
+          </Row>
           {/* </Row> */}
         </Container>
 
@@ -200,12 +204,12 @@ function Home() {
             <div className={cx("slider-header")}>
               <h2>Best Sellers</h2>
               <p>
-                Best Seller của cửa hàng – chất lượng tuyệt hảo, ai cũng yêu thích!
+                Best Seller của cửa hàng – chất lượng tuyệt hảo, ai cũng yêu
+                thích!
               </p>
             </div>
           </Row>
           <Row>
-            
             <SimpleSlider>
               {products.slice(0, 8).map((product) => (
                 <Col key={product.id} lg={3} md={6} sm={12}>

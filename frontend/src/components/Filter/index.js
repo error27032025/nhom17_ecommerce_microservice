@@ -1,27 +1,28 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Form } from "react-bootstrap"; // Dùng React-Bootstrap để tạo Checkbox
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import { Form } from "react-bootstrap";
 import Slider from "rc-slider";
-import "rc-slider/assets/index.css"; // CSS của rc-slider
+import "rc-slider/assets/index.css";
 import styles from "./Filter.module.scss";
 import classNames from "classnames/bind";
 
 const cx = classNames.bind(styles);
 
-const Filter = ({ categories, onFilterChange, selectedCate }) => {
+const Filter = ({ categories = [], onFilterChange, selectedCate }) => {
   const [selectedCateId, setSelectedCateId] = useState(selectedCate);
-  const [priceRange, setPriceRange] = useState([0, 400000]);
+  const [priceRange, setPriceRange] = useState([0, 10000]);
+
+  const timeoutRef = useRef(null);
 
   useEffect(() => {
     setSelectedCateId(selectedCate);
   }, [selectedCate]);
 
-  // Debounce xử lý filter
-  const debouncedFilter = useCallback(
+  const debounceFilter = useCallback(
     (newFilter) => {
-      const timeout = setTimeout(() => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => {
         onFilterChange(newFilter);
-      }, 500); // Debounce 500ms
-      return () => clearTimeout(timeout);
+      }, 500);
     },
     [onFilterChange]
   );
@@ -29,12 +30,12 @@ const Filter = ({ categories, onFilterChange, selectedCate }) => {
   const handleCheckboxChange = (cateId) => {
     const newCateId = cateId === "all" ? null : cateId;
     setSelectedCateId(newCateId);
-    debouncedFilter({ cateId: newCateId, price: priceRange });
+    debounceFilter({ cateId: newCateId, price: priceRange });
   };
 
   const handlePriceChange = (value) => {
     setPriceRange(value);
-    debouncedFilter({ cateId: selectedCateId, price: value });
+    debounceFilter({ cateId: selectedCateId, price: value });
   };
 
   return (
@@ -55,17 +56,22 @@ const Filter = ({ categories, onFilterChange, selectedCate }) => {
       </h5>
 
       {/* Danh sách categories */}
-      {categories.map((category) => (
-        <Form.Check
-          key={category.id}
-          type="radio"
-          id={`custom-radio-${category.id}`}
-          label={category.title}
-          checked={selectedCateId === category.id}
-          onChange={() => handleCheckboxChange(category.id)}
-          className="d-flex align-items-center"
-        />
-      ))}
+      {Array.isArray(categories) &&
+        categories.map((category, index) => {
+          const id = category?.id ?? `unknown-${index}`;
+          const label = category?.title ?? `Danh mục ${index + 1}`;
+          return (
+            <Form.Check
+              key={`cate-${id}`} // đảm bảo key duy nhất và ổn định
+              type="radio"
+              id={`custom-radio-${id}`}
+              label={label}
+              checked={selectedCateId === category.id}
+              onChange={() => handleCheckboxChange(category.id)}
+              className="d-flex align-items-center"
+            />
+          );
+        })}
 
       {/* Filter by Price */}
       <h5 className={cx("title-2")} style={{ marginTop: "20px" }}>
@@ -74,16 +80,16 @@ const Filter = ({ categories, onFilterChange, selectedCate }) => {
       <Slider
         range
         min={0}
-        max={1000000}
-        step={10000}
+        max={10000}
+        step={500}
         value={priceRange}
         onChange={handlePriceChange}
         trackStyle={[{ backgroundColor: "#fc7c7c" }]}
         handleStyle={[{ borderColor: "#fc7c7c" }, { borderColor: "#fc7c7c" }]}
       />
       <p style={{ marginTop: "10px", fontWeight: "bold" }}>
-        Giá: {priceRange[0].toLocaleString()} đ -
-        {priceRange[1].toLocaleString()} đ
+        Giá: {priceRange[0].toLocaleString()} $ -{" "}
+        {priceRange[1].toLocaleString()} $
       </p>
     </div>
   );

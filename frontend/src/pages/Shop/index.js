@@ -18,65 +18,84 @@ function Shop() {
   const [page, setPage] = useState(1);
   const [categories, setCategories] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
-  const [filters, setFilters] = useState({ cateId: null, price: [0, 400000] });
+  const [totalItems, setTotalItems] = useState(0);
+  const [filters, setFilters] = useState({
+    cateId: null,
+    price: [0, 10000],
+    search: "",
+  });
   const [selectedCate, setSelectedCate] = useState(null);
+  const [loadingProducts, setLoadingProducts] = useState(false);
+  const [loadingCategories, setLoadingCategories] = useState(false);
+  const [error, setError] = useState(null);
+
   const limit = 8;
+  const BASE_IMAGE_URL = "http://192.168.100.53:8086/";
+  const API_URL = "http://192.168.100.53:8086/api";
 
-  // useEffect(() => {
-  //   const queryParams = new URLSearchParams(location.search);
-  //   const categoryId = queryParams.get("category");
-  //   const searchValue = queryParams.get("search");
-  //   setSelectedCate(categoryId ? parseInt(categoryId) : null);
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const cateId = queryParams.get("category")
+      ? parseInt(queryParams.get("category"))
+      : null;
+    const search = queryParams.get("search") || "";
 
-  //   setFilters((prev) => ({
-  //     ...prev,
-  //     search: searchValue || "",
-  //     cateId: categoryId ? parseInt(categoryId) : null,
-  //   }));
-  // }, [location.search]);
+    setSelectedCate(cateId);
+    setFilters((prev) => ({
+      ...prev,
+      cateId,
+      search,
+    }));
+    setPage(1);
+  }, [location.search]);
 
-  // useEffect(() => {
-  //   fetchProducts(page, filters);
-  // }, [page, filters]);
-
-  // useEffect(() => {
-  //   const fetchCate = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         "http://34.87.146.141:3001/api/v1/categories"
-  //       );
-  //       setCategories([{ id: null, title: "All" }, ...response.data]);
-  //     } catch (error) {
-  //       console.error("Lỗi khi lấy danh mục:", error);
-  //     }
-  //   };
-  //   fetchCate();
-  // }, []);
-
-  const fetchProducts = async (page, filters) => {
-    try {
-      const params = {
-        page,
-        limit,
-        minPrice: filters.price[0],
-        maxPrice: filters.price[1],
-      };
-
-      if (filters.cateId !== null) {
-        params.category = filters.cateId;
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setLoadingCategories(true);
+      try {
+        const res = await axios.get(`${API_URL}/categories`);
+        setCategories([{ id: null, title: "Tất cả" }, ...res.data]);
+      } catch (error) {
+        console.error("Lỗi khi lấy danh mục:", error);
+      } finally {
+        setLoadingCategories(false);
       }
+    };
+    fetchCategories();
+  }, []);
 
-      if (filters.search !== null) params.search = filters.search;
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoadingProducts(true);
+      setError(null);
+      try {
+        const params = {
+          page,
+          limit,
+          minPrice: filters.price[0],
+          maxPrice: filters.price[1],
+        };
 
-      const response = await axios.get(
-        "http://34.87.146.141:3001/api/v1/products/with-filters",
-        { params }
-      );
+        if (filters.cateId !== null) params.category = filters.cateId;
+        if (filters.search) params.search = filters.search;
 
-      setProducts(response.data.data);
-      setTotalPages(response.data.totalPages);
-    } catch (error) {}
-  };
+        const res = await axios.get(
+          "http://192.168.100.53:8086/api/products?page=1&limit=8&minPrice=0&maxPrice=400000",
+          { params }
+        );
+
+        // Backend trả về mảng sản phẩm thẳng, không có data, totalPages, totalItems
+        setProducts(res.data || []);
+        setTotalPages(1); // Nếu backend chưa hỗ trợ phân trang, để 1 trang
+        setTotalItems(res.data.length || 0);
+      } catch (error) {
+        setError("Không thể tải sản phẩm. Vui lòng thử lại.");
+      } finally {
+        setLoadingProducts(false);
+      }
+    };
+    fetchProducts();
+  }, [page, filters]);
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
@@ -95,40 +114,40 @@ function Shop() {
           <Row>
             <Col lg={3} md={12} sm={12}>
               <div className={cx("left")}>
-                <div className={cx("filter")}>
-                  <Filter
-                    selectedCate={selectedCate}
-                    categories={categories}
-                    onFilterChange={handleFilterChange}
-                  />
-                </div>
+                <Filter
+                  selectedCate={selectedCate}
+                  categories={categories}
+                  onFilterChange={handleFilterChange}
+                />
               </div>
             </Col>
             <Col lg={9} md={12} sm={12}>
               <div className={cx("right")}>
                 <div className={cx("product-count")}>
-                  <p>{products.length}</p>
-                  <h4>Product Found</h4>
-                  <p>{totalPages * limit}</p>
+                  <h4>{totalItems} sản phẩm được tìm thấy</h4>
                 </div>
-                <Container className={cx("product")}>
-                  <Row className="justify-content-center ">
-                    {products.map((product) => (
-                      <Col key={product.id} lg={3} md={4} sm={6}>
-                        <ProductItem
-                          name={product.title}
-                          price={product.price}
-                          image={
-                            "http://34.87.146.141:3001/" +
-                            (product.images[0]?.filepath || "default.jpg")
-                          }
-                          id={product.id}
-                          to={`/product/${product.id}`}
-                        />
-                      </Col>
-                    ))}
-                  </Row>
-                </Container>
+                {error && <p className={cx("error")}>{error}</p>}
+                {loadingProducts ? (
+                  <p>Đang tải sản phẩm...</p>
+                ) : (
+                  <Container className={cx("product")}>
+                    <Row className="justify-content-center">
+                      {products.map((product) => (
+                        <Col key={product.productId} lg={3} md={4} sm={6}>
+                          <ProductItem
+                            name={product.productTitle}
+                            price={product.priceUnit}
+                            image={
+                              product.imageUrl || BASE_IMAGE_URL + "default.jpg"
+                            }
+                            id={product.productId}
+                            to={`/product/${product.productId}`}
+                          />
+                        </Col>
+                      ))}
+                    </Row>
+                  </Container>
+                )}
                 <Pagination
                   currentPage={page}
                   totalPages={totalPages}

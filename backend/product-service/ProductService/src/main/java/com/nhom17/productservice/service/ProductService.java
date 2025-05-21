@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ProductService {
     //    List<ProductDto> findAll();
-    Flux<List<ProductDto>> findAll();
+    Flux<ProductDto> findAll();
 
     ProductDto findById(final Integer productId);
 

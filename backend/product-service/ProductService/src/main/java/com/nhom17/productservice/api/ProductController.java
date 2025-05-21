@@ -16,7 +16,7 @@ import reactor.core.publisher.Flux;
 
 
 import java.util.List;
-
+@CrossOrigin(origins = "http://192.168.100.53:3000")
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -28,8 +28,7 @@ public class ProductController {
 
     // Get a list of all products
     @GetMapping
-    public Flux<List<ProductDto>> findAll() {
-        log.info("ProductDto List, controller; fetch all categories");
+    public Flux<ProductDto> findAll() {
         return productService.findAll();
     }
 

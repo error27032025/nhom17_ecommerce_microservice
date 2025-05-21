@@ -29,21 +29,22 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
     @Override
-    public Flux<List<ProductDto>> findAll() {
+    public Flux<ProductDto> findAll() {
         log.info("ProductDto List, service, fetch all products");
         return Flux.defer(() -> {
-                    List<ProductDto> productDtos = productRepository.findAll()
-                            .stream()
-                            .map(ProductMappingHelper::map)
-                            .distinct()
-                            .toList();
-                    return Flux.just(productDtos);
-                })
-                .onErrorResume(throwable -> {
-                    log.error("Error while fetching products: " + throwable.getMessage());
-                    return Flux.empty();
-                });
+            List<ProductDto> productDtos = productRepository.findAll()
+                    .stream()
+                    .map(ProductMappingHelper::map)
+                    .distinct()
+                    .toList();
+            // Trả về Flux phát ra từng phần tử trong danh sách
+            return Flux.fromIterable(productDtos);
+        }).onErrorResume(throwable -> {
+            log.error("Error while fetching products: " + throwable.getMessage());
+            return Flux.empty();
+        });
     }
+
 
     @Override
     public ProductDto findById(Integer productId) {
