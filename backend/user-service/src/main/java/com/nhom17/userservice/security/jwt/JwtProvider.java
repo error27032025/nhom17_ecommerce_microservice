@@ -89,11 +89,16 @@ public class JwtProvider {
     }
 
     public String getUserNameFromToken(String token) {
+        if (token == null || token.isEmpty() || token.chars().filter(ch -> ch == '.').count() != 2) {
+            // Token không hợp lệ: phải có đúng 2 dấu chấm
+            System.err.println("Invalid JWT token format");
+            return null;
+        }
         try {
             Claims claims = Jwts.parser()
-                    .setSigningKey(jwtSecret)
-                    .parseClaimsJws(token)
-                    .getBody();
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody();
             return claims.getSubject();
         } catch (Exception e) {
             e.printStackTrace();
