@@ -1,0 +1,37 @@
+.pagination-container {
+  display: flex;
+  flex-direction: flex-end;
+  margin-top: 20px;
+}
+
+.pagination {
+  display: flex;
+  list-style: none;
+  gap: 5px;
+}
+
+.pagination li {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--primary);
+  cursor: pointer;
+}
+
+.pagination .active {
+  background-color: var(--active);
+  color: white;
+}
+
+.pagination li:hover {
+  background-color: var(--active);
+  color: white;
+}
+.previus,
+.next {
+  width: 40px;
+  height: 40px;
+}

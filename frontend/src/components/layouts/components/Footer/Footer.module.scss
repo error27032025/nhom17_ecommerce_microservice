@@ -1,0 +1,114 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: var(--primary);
+}
+
+.shipping {
+  color: var(--white);
+  display: flex;
+  justify-content: space-between;
+  padding: 60px 0;
+}
+
+.infor {
+  display: flex;
+  align-items: center;
+}
+
+.text {
+  padding-left: 20px;
+}
+
+.main {
+  display: flex;
+  color: var(--white);
+  border-top: 1px solid #425788;
+  border-bottom: 1px solid #425788;
+  padding: 60px 0;
+}
+
+.main-inner {
+  display: flex;
+}
+
+.left,
+.middle,
+.right {
+  padding: 16px 50px;
+
+  box-sizing: border-box;
+}
+
+.left {
+  border-right: 1px solid #425788;
+}
+.left h3 {
+  margin-bottom: 27px;
+}
+.infor {
+  margin-bottom: 27px;
+}
+.infor a {
+  color: var(--active);
+}
+.contact {
+}
+.address,
+.phone {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 27px;
+}
+.icon {
+  margin-right: 15px;
+  color: var(--active);
+  font-size: 3.6rem;
+}
+
+.middle {
+  display: flex;
+
+  border-right: 1px solid #425788;
+}
+
+.middle li {
+  line-height: 30px;
+}
+
+.middle li:hover {
+  cursor: pointer;
+  color: var(--active);
+}
+
+.middle h3 {
+  padding-bottom: 27px;
+}
+.information h3,
+.account h3 {
+  padding-left: 20px;
+}
+
+.information,
+.account {
+  margin: 0 20px;
+}
+
+.right {
+  // display: flex;
+  flex-direction: column;
+  margin-bottom: 27px;
+  padding-right: 50px;
+}
+
+.right h3 {
+  margin-bottom: 27px;
+}
+
+.right a {
+  color: var(--active);
+}

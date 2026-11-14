@@ -1,0 +1,15 @@
+.wrapper {
+}
+
+.table {
+  th,
+  td {
+    vertical-align: middle; /* Căn giữa theo chiều dọc */
+    text-align: center; /* Căn giữa theo chiều ngang */
+  }
+
+  td img {
+    display: block;
+    margin: 0 auto; /* Căn giữa hình ảnh theo chiều ngang */
+  }
+}
